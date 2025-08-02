@@ -1,0 +1,26 @@
+# STELLAR.TOML for Laam Token
+
+VERSION="2.0.0"
+
+[DOCUMENTATION]
+ORG_NAME="Laam Project"
+ORG_URL="https://laam.online"
+ORG_LOGO="https://fond-magenta-owpureihfj.edgeone.app/20250802_225108.png"
+ORG_DESCRIPTION="Laam is a Stellar-based native token designed to support decentralized finance, real-world commerce, and low-cost, secure peer-to-peer payments."
+
+ORG_TWITTER="laamcoin"
+ORG_TELEGRAM="https://t.me/laamcoin"
+ORG_INSTAGRAM="https://www.instagram.com/laamcoin"
+ORG_YOUTUBE="https://youtube.com/@laamcoin"
+ORG_GITHUB="https://github.com/laam-project"
+
+[[CURRENCIES]]
+code="LAAM"
+issuer="GAL4ECDAXNBMJYFCWIJ32HKVIRLCNEXY664CAZYI3EINQWPLXTMEPR64"
+display_decimals=2
+name="Laam Coin"
+desc="A native Stellar token with fixed supply (1,335,577 LAAM), built for trustless commerce and DeFi."
+image="https://fond-magenta-owpureihfj.edgeone.app/20250802_225108.png"
+conditions="Fixed supply; minting disabled; tradeable on Stellar DEX"
+is_asset_anchored=false
+fixed_number=1335577
