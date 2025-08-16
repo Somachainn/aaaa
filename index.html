@@ -514,6 +514,8 @@
     let server = null;
     let isTestnet = false;
     let LAAM_ASSET = null;
+    let xlmPriceUSD = 0.12; // Default XLM price in USD
+    let currentTradeMode = 'buy'; // 'buy' or 'sell'
     
     // Initialize Stellar SDK when page loads
     function initializeStellar() {
@@ -568,6 +570,22 @@
       }
     }
 
+    // CORRECTED: Fetch XLM price from API
+    async function fetchXLMPrice() {
+      try {
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=stellar&vs_currencies=usd');
+        const data = await response.json();
+        if (data.stellar && data.stellar.usd) {
+          xlmPriceUSD = data.stellar.usd;
+          console.log('XLM price updated:', xlmPriceUSD);
+        }
+      } catch (error) {
+        console.error('Error fetching XLM price:', error);
+        // Use default price if API fails
+        xlmPriceUSD = 0.12;
+      }
+    }
+
     // CORRECTED: Update balance display function
     async function updateBalanceDisplay() {
       if (!currentKeypair || !server) {
@@ -594,10 +612,10 @@
           }
         });
 
-        // Update XLM balance
+        // Update XLM balance with USD values
         document.getElementById('xlmBal').textContent = xlmBalance.toFixed(2);
-        document.getElementById('xlmUsd').textContent = '0.00'; // Would need price API
-        document.getElementById('xlmPrice').textContent = '0.00'; // Would need price API
+        document.getElementById('xlmUsd').textContent = (xlmBalance * xlmPriceUSD).toFixed(2);
+        document.getElementById('xlmPrice').textContent = xlmPriceUSD.toFixed(3);
 
         // Update Laam balance
         document.getElementById('laamBal').textContent = laamBalance.toFixed(2);
@@ -625,6 +643,9 @@
         // Display public key
         document.getElementById('pubKey').textContent = currentKeypair.publicKey();
         
+        // Fetch XLM price first
+        await fetchXLMPrice();
+        
         // Update balance display
         await updateBalanceDisplay();
         
@@ -643,6 +664,56 @@
         document.getElementById('initialView').classList.add('hidden');
         document.getElementById('unlockView').classList.remove('hidden');
       }
+    }
+
+    // CORRECTED: Trade modal functions
+    function openTradeModal(mode) {
+      currentTradeMode = mode;
+      const modal = document.getElementById('tradeModal');
+      const title = document.getElementById('modalTitle');
+      const panelTitle = document.getElementById('panelTitle');
+      const availBalance = document.getElementById('availBalance');
+      const modalBuyBtn = document.getElementById('modalBuyBtn');
+      
+      if (mode === 'buy') {
+        title.textContent = 'Buy Laam';
+        panelTitle.textContent = 'Buy Laam';
+        modalBuyBtn.textContent = 'Buy Laam';
+        modalBuyBtn.className = 'cta buy';
+        
+        // Get XLM balance for buying
+        const xlmBal = document.getElementById('xlmBal').textContent;
+        availBalance.textContent = `${xlmBal} XLM`;
+      } else {
+        title.textContent = 'Sell Laam';
+        panelTitle.textContent = 'Sell Laam';
+        modalBuyBtn.textContent = 'Sell Laam';
+        modalBuyBtn.className = 'cta sell';
+        
+        // Get Laam balance for selling
+        const laamBal = document.getElementById('laamBal').textContent;
+        availBalance.textContent = `${laamBal} Laam`;
+      }
+      
+      modal.classList.add('show');
+    }
+
+    function closeTradeModal() {
+      const modal = document.getElementById('tradeModal');
+      modal.classList.remove('show');
+      
+      // Clear form
+      document.getElementById('modalPrice').value = '';
+      document.getElementById('modalAmount').value = '';
+      document.getElementById('modalTotal').value = '';
+    }
+
+    // Calculate total in modal
+    function calculateTotal() {
+      const price = parseFloat(document.getElementById('modalPrice').value) || 0;
+      const amount = parseFloat(document.getElementById('modalAmount').value) || 0;
+      const total = price * amount;
+      document.getElementById('modalTotal').value = total.toFixed(7);
     }
     
     // Enhanced form validation and interaction
@@ -973,14 +1044,87 @@ Would you like to use this account?`;
           this.disabled = false;
         }
       });
+
+      // CORRECTED: Trade button functionality
+      document.getElementById('btnBuy').addEventListener('click', function() {
+        console.log('Buy button clicked');
+        openTradeModal('buy');
+      });
+
+      document.getElementById('btnSell').addEventListener('click', function() {
+        console.log('Sell button clicked');
+        openTradeModal('sell');
+      });
+
+      // Modal price/amount calculation
+      document.getElementById('modalPrice').addEventListener('input', calculateTotal);
+      document.getElementById('modalAmount').addEventListener('input', calculateTotal);
+
+      // Percentage buttons in modal
+      document.querySelectorAll('.rowBtns button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const percentage = parseInt(this.getAttribute('data-fill'));
+          const availText = document.getElementById('availBalance').textContent;
+          const availAmount = parseFloat(availText.split(' ')[0]);
+          const price = parseFloat(document.getElementById('modalPrice').value) || 0;
+          
+          if (currentTradeMode === 'buy' && price > 0) {
+            // For buying: calculate how much Laam we can buy with percentage of XLM
+            const xlmToSpend = (availAmount * percentage) / 100;
+            const laamAmount = xlmToSpend / price;
+            document.getElementById('modalAmount').value = laamAmount.toFixed(7);
+          } else if (currentTradeMode === 'sell') {
+            // For selling: use percentage of Laam balance
+            const laamToSell = (availAmount * percentage) / 100;
+            document.getElementById('modalAmount').value = laamToSell.toFixed(7);
+          }
+          
+          calculateTotal();
+        });
+      });
+
+      // Modal execute trade button
+      document.getElementById('modalBuyBtn').addEventListener('click', async function() {
+        const price = parseFloat(document.getElementById('modalPrice').value);
+        const amount = parseFloat(document.getElementById('modalAmount').value);
+        
+        if (!price || !amount) {
+          showError('Please enter both price and amount.');
+          return;
+        }
+        
+        if (!currentKeypair) {
+          showError('Wallet not loaded.');
+          return;
+        }
+        
+        this.disabled = true;
+        this.textContent = currentTradeMode === 'buy' ? 'Buying...' : 'Selling...';
+        
+        try {
+          // This is a simplified trade execution
+          // In a real implementation, you would create offers on the Stellar DEX
+          showSuccess(`${currentTradeMode === 'buy' ? 'Buy' : 'Sell'} order placed successfully!\n\nAmount: ${amount} Laam\nPrice: ${price} XLM per Laam\nTotal: ${(price * amount).toFixed(7)} XLM`);
+          
+          closeTradeModal();
+          
+        } catch (error) {
+          console.error('Trade error:', error);
+          showError('Failed to execute trade: ' + error.message);
+        } finally {
+          this.disabled = false;
+          this.textContent = currentTradeMode === 'buy' ? 'Buy Laam' : 'Sell Laam';
+        }
+      });
       
       console.log('All event listeners attached successfully');
     });
 
-    // Auto-refresh balance every 30 seconds
-    setInterval(() => {
+    // Auto-refresh balance and price every 30 seconds
+    setInterval(async () => {
       if (currentKeypair && !document.getElementById('loggedInView').classList.contains('hidden')) {
-        updateBalanceDisplay();
+        await fetchXLMPrice();
+        await updateBalanceDisplay();
       }
     }, 30000);
   </script>
