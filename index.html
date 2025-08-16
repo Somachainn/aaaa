@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Laam wallet</title>
+<title>Laam Wallet</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/10.4.0/stellar-sdk.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <style>
@@ -25,7 +25,7 @@
   }
   .app{ width:100%; max-width:450px; text-align:center; }
   
-  /* Logo and Header Styles - matching the image */
+  /* Logo and Header Styles */
   .logo-container{ 
     display:flex; 
     align-items:center; 
@@ -47,7 +47,156 @@
     text-shadow:1px 1px 2px rgba(0,0,0,0.1); 
   }
   
-  /* Import Card Styles - exactly matching the image design */
+  /* Token Info Card - New enhanced display */
+  .token-info-card {
+    background:rgba(255, 255, 255, 0.95);
+    border:none;
+    border-radius:24px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.12);
+    padding:30px;
+    margin:20px auto;
+    backdrop-filter:blur(10px);
+    max-width:100%;
+  }
+  
+  .token-header {
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:25px;
+    padding-bottom:20px;
+    border-bottom:2px solid #e0e0e0;
+  }
+  
+  .token-header img {
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .token-details h2 {
+    margin:0;
+    font-size:1.8rem;
+    font-weight:700;
+    color:#1976d2;
+  }
+  
+  .token-code {
+    font-size:0.9rem;
+    color:#666;
+    font-family:'SF Mono', Monaco, monospace;
+    background:#f0f0f0;
+    padding:4px 8px;
+    border-radius:6px;
+    margin-top:5px;
+  }
+  
+  .balance-section {
+    margin-bottom:25px;
+  }
+  
+  .balance-title {
+    font-size:1.1rem;
+    font-weight:600;
+    color:#1976d2;
+    margin-bottom:15px;
+    text-align:left;
+  }
+  
+  .balance-display {
+    background:#f8f9fa;
+    border:2px solid #e0e0e0;
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+  }
+  
+  .balance-amount {
+    font-size:2.2rem;
+    font-weight:800;
+    color:#1976d2;
+    margin-bottom:8px;
+  }
+  
+  .balance-usd {
+    font-size:1.1rem;
+    color:#666;
+    margin-bottom:5px;
+  }
+  
+  .balance-price {
+    font-size:0.9rem;
+    color:#999;
+  }
+  
+  .price-section {
+    margin-bottom:25px;
+  }
+  
+  .price-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+  }
+  
+  .price-item {
+    background:#f8f9fa;
+    border:2px solid #e0e0e0;
+    border-radius:12px;
+    padding:15px;
+    text-align:center;
+  }
+  
+  .price-label {
+    font-size:0.9rem;
+    color:#666;
+    margin-bottom:8px;
+  }
+  
+  .price-value {
+    font-size:1.4rem;
+    font-weight:700;
+    color:#1976d2;
+  }
+  
+  .token-description {
+    background:#e3f2fd;
+    border-left:4px solid #1976d2;
+    padding:15px;
+    border-radius:8px;
+    text-align:left;
+    font-size:0.95rem;
+    line-height:1.5;
+    color:#333;
+    margin-bottom:25px;
+  }
+  
+  .issuer-info {
+    background:#f5f5f5;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:20px;
+  }
+  
+  .issuer-label {
+    font-size:0.9rem;
+    color:#666;
+    margin-bottom:8px;
+  }
+  
+  .issuer-address {
+    font-family:'SF Mono', Monaco, monospace;
+    font-size:0.8rem;
+    color:#333;
+    background:#fff;
+    padding:8px;
+    border-radius:6px;
+    word-break:break-all;
+    border:1px solid #ddd;
+  }
+  
+  /* Import Card Styles */
   .import-card{
     background:rgba(255, 255, 255, 0.95);
     border:none;
@@ -175,7 +324,7 @@
     line-height:1.4;
   }
 
-  /* Original styles for other sections - keeping all functionality */
+  /* Original styles for other sections */
   .card{
     background:var(--card); border:1px solid var(--line); border-radius:var(--rad);
     box-shadow:0 10px 30px rgba(0,0,0,0.1); padding:22px; margin:14px auto;
@@ -210,65 +359,8 @@
   .send-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   @media (max-width:640px){ .send-row{ grid-template-columns:1fr; } }
 
-  /* Trade UI */
-  .trade-card{ padding:0; overflow:hidden; }
-  .trade-header{ display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid var(--line); }
-  .trade-header h3{ margin:0; font-size:1.2rem; }
-  .trade-header .icon{ font-size:1.5rem; cursor:pointer; }
-  .trade-asset-selector{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#f8f9fa; }
-  .asset-box{ display:flex; align-items:center; gap:8px; }
-  .asset-box img{ width:24px; height:24px; }
-  .asset-box .asset-name{ font-weight:600; }
-  .asset-box .asset-issuer{ font-size:.8rem; color:var(--muted); }
-  .swap-icon{ font-size:1.5rem; background:#fff; border-radius:50%; padding:5px; border:1px solid var(--line); cursor:pointer; }
-  .trade-tabs{ display:flex; border-bottom:1px solid var(--line); }
-  .trade-tabs .tab{ flex:1; padding:12px; text-align:center; cursor:pointer; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; }
-  .trade-tabs .tab.active{ color:var(--brand); border-bottom-color:var(--brand); }
-  .orderbook-content{ padding:10px 20px 20px; }
-  .orderbook-table{ width:100%; border-collapse:collapse; }
-  .orderbook-table th,.orderbook-table td{ text-align:right; padding:8px 4px; font-size:.9rem; }
-  .orderbook-table th{ color:var(--muted); font-weight:normal; }
-  .orderbook-table th:first-child,.orderbook-table td:first-child{ text-align:left; }
-  .orderbook-table .bid-row td:nth-child(2){ color:var(--ok); }
-  .orderbook-table .ask-row td:nth-child(2){ color:var(--err); }
-  .spread{ padding:12px 0; text-align:center; font-weight:bold; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin:8px 0; }
-  .trade-actions{ display:flex; gap:15px; padding:20px; background:#f8f9fa; border-top:1px solid var(--line); }
-  .trade-actions button{ flex:1; padding:14px; font-size:1.1rem; border-radius:12px; text-transform:uppercase; }
-  .btn-buy{ background:var(--ok); box-shadow:0 4px 14px rgba(40,167,69,0.3); }
-  .btn-buy:hover{ background:#218838; }
-  .btn-sell{ background:#e0e0e0; color:var(--text); box-shadow:0 4px 14px rgba(0,0,0,0.1); }
-  .btn-sell:hover{ background:#d5d5d5; }
-
-  /* Modal */
-  .trade-modal{ display:none; position:fixed; inset:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; }
-  .trade-modal.show{ display:flex; }
-  .modal-content{ background:var(--card); border:1px solid var(--line); border-radius:var(--rad); box-shadow:0 10px 30px rgba(0,0,0,0.1); padding:20px; max-width:420px; width:90%; max-height:90vh; overflow-y:auto; }
-  .modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-  .modal-title{ font-size:1.5rem; font-weight:700; color:var(--brand); margin:0; }
-  .modal-close{ background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--muted); padding:0; width:auto; height:auto; box-shadow:none; text-transform:none; }
-  .modal-close:hover{ color:var(--text); transform:none; box-shadow:none; }
-  .panel{ background:#f8f9fa; border:1px solid var(--line); border-radius:12px; padding:20px; margin:0; }
-  .titleRow{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-  .title{ font-size:1.2rem; font-weight:700; color:var(--brand); }
-  .avail{ font-size:.9rem; color:var(--muted); }
-  .field{ margin-bottom:16px; }
-  .inputWrap{ position:relative; display:flex; align-items:center; }
-  .inputWrap input{ padding-right:60px; margin:0; }
-  .unit{ position:absolute; right:12px; color:var(--muted); font-weight:600; pointer-events:none; }
-  .hint{ font-size:.8rem; color:var(--muted); margin-top:4px; text-align:left; }
-  .rowBtns{ display:flex; gap:8px; margin-top:8px; }
-  .rowBtns button{ flex:1; padding:8px 12px; font-size:.9rem; background:#e9ecef; color:var(--text); border:1px solid var(--line); text-transform:none; font-weight:600; }
-  .rowBtns button:hover{ background:var(--brand); color:#fff; transform:none; }
-  .totalBox{ margin-bottom:20px; }
-  .totalBox input{ background:#e9ecef; color:var(--muted); }
-  .cta{ padding:16px; font-size:1.1rem; font-weight:700; text-transform:uppercase; margin:0; }
-  .cta.buy{ background:var(--ok); box-shadow:0 4px 14px rgba(40,167,69,0.3); }
-  .cta.buy:hover{ background:#218838; }
-  .cta.sell{ background:#e0e0e0; color:var(--text); box-shadow:0 4px 14px rgba(0,0,0,0.1); }
-  .cta.sell:hover{ background:#d5d5d5; }
-
   /* Animation */
-  .import-card {
+  .import-card, .token-info-card {
     animation: slideUp 0.6s ease-out;
   }
 
@@ -289,7 +381,7 @@
       padding: 0 10px;
     }
     
-    .import-card {
+    .import-card, .token-info-card {
       padding: 30px 20px;
       margin: 10px;
     }
@@ -302,6 +394,10 @@
     h1 {
       font-size: 2.2rem;
     }
+    
+    .price-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 </head>
@@ -309,10 +405,53 @@
   <div class="app">
     <div class="logo-container">
       <img src="https://i.ibb.co/r28SP1bN/20250802-225108.png" alt="Laam Logo">
-      <h1>Laam wallet</h1>
+      <h1>Laam Wallet</h1>
     </div>
 
-    <!-- AUTH SECTION - Modified to match the image design exactly -->
+    <!-- TOKEN INFO SECTION - New enhanced display -->
+    <div class="token-info-card">
+      <div class="token-header">
+        <img src="https://i.ibb.co/r28SP1bN/20250802-225108.png" alt="Laam Token">
+        <div class="token-details">
+          <h2>Laam Token</h2>
+          <div class="token-code">LAAM</div>
+        </div>
+      </div>
+      
+      <div class="balance-section">
+        <div class="balance-title">Available Balance</div>
+        <div class="balance-display">
+          <div class="balance-amount" id="laamBalance">0.00</div>
+          <div class="balance-usd">≈ $<span id="laamBalanceUsd">0.00</span> USD</div>
+          <div class="balance-price">@ $<span id="currentLaamPrice">0.06</span> per LAAM</div>
+        </div>
+      </div>
+      
+      <div class="price-section">
+        <div class="balance-title">Price Information</div>
+        <div class="price-grid">
+          <div class="price-item">
+            <div class="price-label">Current Price</div>
+            <div class="price-value">$0.06</div>
+          </div>
+          <div class="price-item">
+            <div class="price-label">Max Supply</div>
+            <div class="price-value">1.34M</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="token-description">
+        <strong>About Laam:</strong> Laam is a limited supply token on Stellar with a maximum of 1,335,577 tokens, issued only once to preserve value.
+      </div>
+      
+      <div class="issuer-info">
+        <div class="issuer-label">Token Issuer Address:</div>
+        <div class="issuer-address">GAL4ECDAXNBMJYFCWIJ32HKVIRLCNEXY664CAZYI3EINQWPLXTMEPR64</div>
+      </div>
+    </div>
+
+    <!-- AUTH SECTION -->
     <div id="authSection">
       <div class="import-card">
         <div id="unlockView" class="hidden">
@@ -331,7 +470,6 @@
         </div>
 
         <div id="initialView">
-          <!-- Single card design exactly matching the image -->
           <div class="form-group">
             <label class="form-label" for="secretKeyInput">Secret Key (S...)</label>
             <input class="form-input" id="secretKeyInput" type="password" placeholder="SXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"/>
@@ -356,7 +494,7 @@
       </div>
     </div>
 
-    <!-- LOGGED IN VIEW - Keep all original functionality -->
+    <!-- LOGGED IN VIEW -->
     <div id="loggedInView" class="hidden">
       <div class="card">
         <div class="balances">
@@ -388,735 +526,258 @@
           <button id="btnSend" style="margin-top:10px;">Send Now</button>
         </div>
       </div>
-
-      <!-- Trade -->
-      <div class="card trade-card">
-        <div class="trade-header">
-          <span class="icon">←</span>
-          <h3>Trade</h3>
-          <span class="icon" id="refreshOB">↻</span>
-        </div>
-        <div class="trade-asset-selector">
-          <div class="asset-box">
-            <img src="https://i.ibb.co/r28SP1bN/20250802-225108.png" alt="Laam">
-            <div>
-              <div class="asset-name">Laam</div>
-              <div class="asset-issuer">laam.online</div>
-            </div>
-          </div>
-          <span class="swap-icon" id="swapAssets">⇄</span>
-          <div class="asset-box">
-            <img src="https://res.coinpaper.com/coinpaper/stellar_xlm_logo_07021d63c0.png" alt="XLM">
-            <div>
-              <div class="asset-name">XLM</div>
-              <div class="asset-issuer">stellar.org</div>
-            </div>
-          </div>
-        </div>
-        <div class="trade-tabs">
-          <div class="tab" id="overviewTab">Overview</div>
-          <div class="tab active" id="orderbookTab">Orderbook</div>
-          <div class="tab" id="lastTradesTab">Last Trades</div>
-        </div>
-        <div class="orderbook-content" id="orderbookContent">
-          <table class="orderbook-table">
-            <thead><tr><th>Amount (Laam)</th><th>Price (XLM)</th><th>Total (XLM)</th></tr></thead>
-            <tbody id="asksBody"></tbody>
-          </table>
-          <div class="spread" id="spreadValue">-</div>
-          <table class="orderbook-table">
-            <tbody id="bidsBody"></tbody>
-          </table>
-        </div>
-        <div id="overviewContent" style="display:none; padding:10px 20px 20px;">
-          <div style="font-size:2.5rem; font-weight:bold; text-align:center; margin-bottom:10px;"><span id="overviewLaamPriceXLM">0.00000</span> XLM</div>
-          <div class="muted" style="text-align:center; font-size:.9rem; margin-bottom:20px;">Laam price (sample)</div>
-          <div style="display:flex; justify-content:center; gap:10px; margin-bottom:20px;">
-            <button class="btn-secondary" style="flex:0 1 auto; padding:8px 15px; border-radius:8px;">1D</button>
-            <button class="btn-secondary" style="flex:0 1 auto; padding:8px 15px; border-radius:8px;">1W</button>
-            <button class="btn-secondary" style="flex:0 1 auto; padding:8px 15px; border-radius:8px;">1M</button>
-            <button class="btn-secondary" style="flex:0 1 auto; padding:8px 15px; border-radius:8px;">1Y</button>
-          </div>
-          <div style="width:100%; height:200px; background:#f0f0f0; border-radius:12px; margin-bottom:10px; display:flex; align-items:center; justify-content:center; color:var(--muted);">[Graph Placeholder]</div>
-        </div>
-        <div id="lastTradesContent" style="display:none; padding:10px 20px 20px;">
-          <p class="muted">Recent trades will appear here.</p>
-        </div>
-        <div class="trade-actions">
-          <button class="btn-buy" id="btnBuy">Buy</button>
-          <button class="btn-sell" id="btnSell">Sell</button>
-        </div>
-      </div>
     </div>
   </div>
 
-  <!-- Trade Modal -->
-  <div id="tradeModal" class="trade-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="modalTitle">Buy Laam</h3>
-        <button class="modal-close" onclick="closeTradeModal()">&times;</button>
-      </div>
-      <div class="panel">
-        <div class="titleRow">
-          <div class="title" id="panelTitle">Buy Laam</div>
-          <div class="avail">Available: <span id="availBalance">0 XLM</span></div>
-        </div>
+<script>
+// Token information
+const LAAM_TOKEN = {
+  code: "Laam",
+  issuer: "GAL4ECDAXNBMJYFCWIJ32HKVIRLCNEXY664CAZYI3EINQWPLXTMEPR64",
+  name: "Laam",
+  description: "Laam is a limited supply token on Stellar with a maximum of 1,335,577 tokens, issued only once to preserve value.",
+  image: "https://i.ibb.co/r28SP1bN/20250802-225108.png",
+  maxSupply: 1335577,
+  currentPrice: 0.06
+};
 
-        <div class="field">
-          <div class="inputWrap">
-            <input id="modalPrice" type="number" step="0.0000001" placeholder="0.135" />
-            <div class="unit">XLM</div>
-          </div>
-          <div class="hint">Price (XLM per Laam)</div>
-        </div>
+// Initialize Stellar SDK
+const StellarSdk = window.StellarSdk;
+const server = new StellarSdk.Server('https://horizon.stellar.org');
 
-        <div class="field">
-          <div class="inputWrap">
-            <input id="modalAmount" type="number" step="0.0000001" placeholder="Amount" />
-            <div class="unit">Laam</div>
-          </div>
-          <div class="rowBtns">
-            <button data-fill="25">25%</button>
-            <button data-fill="50">50%</button>
-            <button data-fill="75">75%</button>
-            <button data-fill="100">100%</button>
-          </div>
-        </div>
+let currentKeypair = null;
+let currentAccount = null;
 
-        <div class="totalBox">
-          <div class="inputWrap">
-            <input id="modalTotal" type="number" step="0.0000001" placeholder="Total" readonly />
-            <div class="unit">XLM</div>
-          </div>
-          <div class="hint">Total cost</div>
-        </div>
+// DOM elements
+const authSection = document.getElementById('authSection');
+const loggedInView = document.getElementById('loggedInView');
+const initialView = document.getElementById('initialView');
+const unlockView = document.getElementById('unlockView');
 
-        <button class="cta buy" id="modalBuyBtn">Buy Laam</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Global variables
-    let currentKeypair = null;
-    let server = null;
-    let isTestnet = false;
+// Update balance display
+async function updateBalanceDisplay() {
+  if (!currentAccount) return;
+  
+  try {
+    const account = await server.loadAccount(currentKeypair.publicKey());
+    let laamBalance = 0;
     
-    // Initialize Stellar SDK when page loads
-    function initializeStellar() {
-      try {
-        if (typeof StellarSdk !== 'undefined') {
-          server = new StellarSdk.Server('https://horizon.stellar.org');
-          console.log('Stellar SDK initialized successfully');
-        } else {
-          console.error('Stellar SDK not loaded');
-          showError('Stellar SDK failed to load. Please refresh the page.');
-        }
-      } catch (error) {
-        console.error('Error initializing Stellar SDK:', error);
-        showError('Failed to initialize Stellar SDK: ' + error.message);
+    // Find Laam balance
+    account.balances.forEach(balance => {
+      if (balance.asset_code === 'Laam' && balance.asset_issuer === LAAM_TOKEN.issuer) {
+        laamBalance = parseFloat(balance.balance);
       }
-    }
-    
-    // Laam asset details
-    let LAAM_ASSET = null;
-    
-    function initializeAssets() {
-      try {
-        if (typeof StellarSdk !== 'undefined') {
-          // Using the correct Laam asset issuer from laam.online
-          LAAM_ASSET = new StellarSdk.Asset('LAAM', 'GCKFBEIYTKP5RDBQMTVVALOEWNYXTNJUI63FRLPQ6VQJJ5LJNF7DSUMR');
-          console.log('Assets initialized successfully with correct issuer');
-        }
-      } catch (error) {
-        console.error('Error initializing assets:', error);
-        // Try with a different known issuer if the first one fails
-        try {
-          LAAM_ASSET = new StellarSdk.Asset('LAAM', 'GCKFBEIYTKP5RDBQMTVVALOEWNYXTNJUI63FRLPQ6VQJJ5LJNF7DSUMR');
-          console.log('Assets initialized with fallback issuer');
-        } catch (fallbackError) {
-          console.error('Fallback asset initialization also failed:', fallbackError);
-          // Set LAAM_ASSET to null so we can handle it gracefully
-          LAAM_ASSET = null;
-        }
-      }
-    }
-    
-    // Utility functions
-    function showError(message) {
-      alert('Error: ' + message);
-    }
-    
-    function showSuccess(message) {
-      alert('Success: ' + message);
-    }
-    
-    function formatAmount(amount) {
-      return parseFloat(amount).toFixed(7);
-    }
-    
-    function encryptSecretKey(secretKey, password) {
-      return CryptoJS.AES.encrypt(secretKey, password).toString();
-    }
-    
-    function decryptSecretKey(encryptedKey, password) {
-      try {
-        const bytes = CryptoJS.AES.decrypt(encryptedKey, password);
-        return bytes.toString(CryptoJS.enc.Utf8);
-      } catch (e) {
-        return null;
-      }
-    }
-    
-    // Enhanced form validation and interaction
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM loaded, initializing...');
-      
-      // Initialize Stellar SDK and assets
-      initializeStellar();
-      initializeAssets();
-      
-      // Check if libraries are loaded
-      if (typeof StellarSdk === 'undefined') {
-        console.error('StellarSdk is not defined');
-        showError('Stellar SDK failed to load. Please refresh the page.');
-        return;
-      }
-      
-      if (typeof CryptoJS === 'undefined') {
-        console.error('CryptoJS is not defined');
-        showError('CryptoJS failed to load. Please refresh the page.');
-        return;
-      }
-      
-      console.log('All libraries loaded successfully');
-      
-      // Form submission handler
-      const importForm = document.getElementById('importAndSaveBtn');
-      const secretKeyInput = document.getElementById('secretKeyInput');
-      const passwordInput = document.getElementById('savePasswordInput');
-      
-      if (!importForm || !secretKeyInput || !passwordInput) {
-        console.error('Required elements not found');
-        return;
-      }
-      
-      console.log('Form elements found successfully');
-      
-      // Add interactive effects
-      document.querySelectorAll('.form-input').forEach(input => {
-        input.addEventListener('focus', function() {
-          this.parentElement.style.transform = 'scale(1.02)';
-        });
-        
-        input.addEventListener('blur', function() {
-          this.parentElement.style.transform = 'scale(1)';
-        });
-      });
-
-      importForm.addEventListener('click', async function(e) {
-        e.preventDefault();
-        console.log('Import button clicked');
-        
-        const secretKey = secretKeyInput.value.trim();
-        const password = passwordInput.value;
-        
-        console.log('Secret key length:', secretKey.length);
-        console.log('Password length:', password.length);
-        
-        if (!secretKey.startsWith('S') || secretKey.length !== 56) {
-          showError('Invalid secret key format. Secret key should start with S and be 56 characters long.');
-          return;
-        }
-        
-        if (password.length < 8) {
-          showError('Password must be at least 8 characters long.');
-          return;
-        }
-        
-        // Import process
-        this.textContent = 'Importing...';
-        this.disabled = true;
-        
-        try {
-          console.log('Validating secret key...');
-          // Validate secret key
-          currentKeypair = StellarSdk.Keypair.fromSecret(secretKey);
-          console.log('Secret key validated successfully');
-          
-          // Encrypt and save
-          console.log('Encrypting and saving...');
-          const encryptedKey = encryptSecretKey(secretKey, password);
-          localStorage.setItem('laam_wallet_key', encryptedKey);
-          localStorage.setItem('laam_wallet_public', currentKeypair.publicKey());
-          console.log('Wallet saved successfully');
-          
-          // Load wallet
-          console.log('Loading wallet...');
-          await loadWallet();
-          
-          showSuccess('Wallet imported successfully!');
-          document.getElementById('authSection').classList.add('hidden');
-          document.getElementById('loggedInView').classList.remove('hidden');
-          
-        } catch (error) {
-          console.error('Import error:', error);
-          showError('Failed to import wallet: ' + error.message);
-        } finally {
-          this.textContent = 'Import and Save';
-          this.disabled = false;
-        }
-      });
-      
-      // Generate new account function
-      document.getElementById('generateAccountBtn').addEventListener('click', function() {
-        console.log('Generate account button clicked');
-        
-        try {
-          const newKeypair = StellarSdk.Keypair.random();
-          const secretKey = newKeypair.secret();
-          const publicKey = newKeypair.publicKey();
-          
-          console.log('New keypair generated successfully');
-          
-          const message = `New Stellar Account Generated:
-          
-Secret Key: ${secretKey}
-Public Key: ${publicKey}
-
-⚠️ IMPORTANT: Save your secret key securely! 
-You will need to fund this account with at least 2 XLM to activate it.
-
-Would you like to use this account?`;
-          
-          if (confirm(message)) {
-            secretKeyInput.value = secretKey;
-            console.log('Secret key filled into input field');
-          }
-        } catch (error) {
-          console.error('Generate account error:', error);
-          showError('Failed to generate account: ' + error.message);
-        }
-      });
-      
-      // Unlock wallet functionality
-      document.getElementById('unlockBtn').addEventListener('click', async function() {
-        const password = document.getElementById('walletPassword').value;
-        const encryptedKey = localStorage.getItem('laam_wallet_key');
-        
-        if (!encryptedKey) {
-          showError('No wallet found. Please import a wallet first.');
-          return;
-        }
-        
-        const secretKey = decryptSecretKey(encryptedKey, password);
-        if (!secretKey) {
-          showError('Invalid password.');
-          return;
-        }
-        
-        try {
-          currentKeypair = StellarSdk.Keypair.fromSecret(secretKey);
-          await loadWallet();
-          
-          document.getElementById('authSection').classList.add('hidden');
-          document.getElementById('loggedInView').classList.remove('hidden');
-        } catch (error) {
-          showError('Failed to unlock wallet: ' + error.message);
-        }
-      });
-      
-      // Check if wallet exists
-      if (localStorage.getItem('laam_wallet_key')) {
-        document.getElementById('initialView').classList.add('hidden');
-        document.getElementById('unlockView').classList.remove('hidden');
-      }
-      
-      // Logout functionality
-      document.getElementById('logoutBtn').addEventListener('click', function() {
-        currentKeypair = null;
-        document.getElementById('loggedInView').classList.add('hidden');
-        document.getElementById('authSection').classList.remove('hidden');
-        
-        if (localStorage.getItem('laam_wallet_key')) {
-          document.getElementById('initialView').classList.add('hidden');
-          document.getElementById('unlockView').classList.remove('hidden');
-        } else {
-          document.getElementById('initialView').classList.remove('hidden');
-          document.getElementById('unlockView').classList.add('hidden');
-        }
-      });
-      
-      // Send toggle
-      document.getElementById('btnSendToggle').addEventListener('click', function() {
-        const sendForm = document.getElementById('sendForm');
-        sendForm.style.display = sendForm.style.display === 'none' ? 'block' : 'none';
-      });
-      
-      // Send functionality
-      document.getElementById('btnSend').addEventListener('click', async function() {
-        const asset = document.getElementById('sendAsset').value;
-        const amount = document.getElementById('sendAmount').value;
-        const destination = document.getElementById('sendDest').value.trim();
-        
-        if (!amount || !destination) {
-          showError('Please fill in all fields.');
-          return;
-        }
-        
-        if (!destination.startsWith('G') || destination.length !== 56) {
-          showError('Invalid destination address.');
-          return;
-        }
-        
-        this.textContent = 'Sending...';
-        this.disabled = true;
-        
-        try {
-          await sendPayment(asset, amount, destination);
-          showSuccess(`Successfully sent ${amount} ${asset} to ${destination}`);
-          await loadWallet(); // Refresh balances
-        } catch (error) {
-          showError('Failed to send payment: ' + error.message);
-        } finally {
-          this.textContent = 'Send Now';
-          this.disabled = false;
-        }
-      });
-      
-      // Add trustline functionality
-      document.getElementById('addTrustlineBtn').addEventListener('click', async function() {
-        this.textContent = 'Adding...';
-        this.disabled = true;
-        
-        try {
-          await addTrustline();
-          showSuccess('Laam trustline added successfully!');
-          await loadWallet(); // Refresh balances
-        } catch (error) {
-          showError('Failed to add trustline: ' + error.message);
-        } finally {
-          this.textContent = 'Add Laam Trustline';
-          this.disabled = false;
-        }
-      });
-      
-      // Trade functionality
-      document.getElementById('btnBuy').addEventListener('click', function() {
-        openTradeModal('buy');
-      });
-      
-      document.getElementById('btnSell').addEventListener('click', function() {
-        openTradeModal('sell');
-      });
-      
-      // Modal buy button
-      document.getElementById('modalBuyBtn').addEventListener('click', async function() {
-        const price = document.getElementById('modalPrice').value;
-        const amount = document.getElementById('modalAmount').value;
-        
-        if (!price || !amount) {
-          showError('Please fill in all fields.');
-          return;
-        }
-        
-        this.textContent = 'Processing...';
-        this.disabled = true;
-        
-        try {
-          await placeBuyOrder(price, amount);
-          showSuccess('Buy order placed successfully!');
-          closeTradeModal();
-          await loadWallet(); // Refresh balances
-        } catch (error) {
-          showError('Failed to place order: ' + error.message);
-        } finally {
-          this.textContent = 'Buy Laam';
-          this.disabled = false;
-        }
-      });
-      
-      // Price/amount calculation
-      document.getElementById('modalPrice').addEventListener('input', updateTotal);
-      document.getElementById('modalAmount').addEventListener('input', updateTotal);
-      
-      // Percentage buttons
-      document.querySelectorAll('.rowBtns button').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const percentage = parseInt(this.dataset.fill);
-          const availBalance = parseFloat(document.getElementById('availBalance').textContent.split(' ')[0]);
-          const price = parseFloat(document.getElementById('modalPrice').value) || 0;
-          
-          if (price > 0) {
-            const maxAmount = (availBalance * percentage / 100) / price;
-            document.getElementById('modalAmount').value = maxAmount.toFixed(7);
-            updateTotal();
-          }
-        });
-      });
-      
-      // Refresh orderbook
-      document.getElementById('refreshOB').addEventListener('click', loadOrderbook);
-      
-      // Tab switching
-      document.getElementById('overviewTab').addEventListener('click', () => switchTab('overview'));
-      document.getElementById('orderbookTab').addEventListener('click', () => switchTab('orderbook'));
-      document.getElementById('lastTradesTab').addEventListener('click', () => switchTab('lastTrades'));
     });
     
-    // Wallet functions
-    async function loadWallet() {
-      if (!currentKeypair) return;
-      
-      try {
-        console.log('Loading wallet for:', currentKeypair.publicKey());
-        // Load account
-        const account = await server.loadAccount(currentKeypair.publicKey());
-        console.log('Account loaded, balances:', account.balances);
-        
-        // Update public key display
-        document.getElementById('pubKey').textContent = currentKeypair.publicKey();
-        
-        // Update balances
-        let xlmBalance = '0.00';
-        let laamBalance = '0.00';
-        
-        account.balances.forEach(balance => {
-          console.log('Processing balance:', balance);
-          if (balance.asset_type === 'native') {
-            xlmBalance = formatAmount(balance.balance);
-            console.log('XLM balance found:', xlmBalance);
-          } else if (balance.asset_code === 'LAAM') {
-            // Check for Laam balance regardless of issuer for now
-            laamBalance = formatAmount(balance.balance);
-            console.log('LAAM balance found:', laamBalance, 'from issuer:', balance.asset_issuer);
-          }
-        });
-        
-        document.getElementById('xlmBal').textContent = xlmBalance;
-        document.getElementById('laamBal').textContent = laamBalance;
-        console.log('Updated balances - XLM:', xlmBalance, 'LAAM:', laamBalance);
-        
-        // Update USD values (mock prices)
-        const xlmPrice = 0.12; // Mock XLM price
-        const laamPrice = 0.06; // Mock Laam price
-        
-        document.getElementById('xlmUsd').textContent = (parseFloat(xlmBalance) * xlmPrice).toFixed(2);
-        document.getElementById('laamUsd').textContent = (parseFloat(laamBalance) * laamPrice).toFixed(2);
-        document.getElementById('xlmPrice').textContent = xlmPrice.toFixed(2);
-        document.getElementById('laamPrice').textContent = laamPrice.toFixed(2);
-        
-        // Load orderbook
-        await loadOrderbook();
-        
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          showError('Account not found. Please fund your account with at least 2 XLM to activate it.');
-        } else {
-          console.error('Error loading wallet:', error);
-        }
-      }
+    // Update the token info card
+    document.getElementById('laamBalance').textContent = laamBalance.toFixed(2);
+    document.getElementById('laamBalanceUsd').textContent = (laamBalance * LAAM_TOKEN.currentPrice).toFixed(2);
+    document.getElementById('currentLaamPrice').textContent = LAAM_TOKEN.currentPrice.toFixed(2);
+    
+    // Update the logged in view balances
+    document.getElementById('laamBal').textContent = laamBalance.toFixed(2);
+    document.getElementById('laamUsd').textContent = (laamBalance * LAAM_TOKEN.currentPrice).toFixed(2);
+    document.getElementById('laamPrice').textContent = LAAM_TOKEN.currentPrice.toFixed(2);
+    
+  } catch (error) {
+    console.error('Error updating balance:', error);
+  }
+}
+
+// Check if wallet is saved
+function checkSavedWallet() {
+  const encryptedKey = localStorage.getItem('laam_wallet_key');
+  if (encryptedKey) {
+    initialView.classList.add('hidden');
+    unlockView.classList.remove('hidden');
+  }
+}
+
+// Import and save wallet
+document.getElementById('importAndSaveBtn').addEventListener('click', async () => {
+  const secretKey = document.getElementById('secretKeyInput').value.trim();
+  const password = document.getElementById('savePasswordInput').value;
+  
+  if (!secretKey || !password) {
+    alert('Please fill in both fields');
+    return;
+  }
+  
+  if (password.length < 8) {
+    alert('Password must be at least 8 characters');
+    return;
+  }
+  
+  try {
+    const keypair = StellarSdk.Keypair.fromSecret(secretKey);
+    
+    // Encrypt and save
+    const encrypted = CryptoJS.AES.encrypt(secretKey, password).toString();
+    localStorage.setItem('laam_wallet_key', encrypted);
+    
+    currentKeypair = keypair;
+    showLoggedInView();
+    
+  } catch (error) {
+    alert('Invalid secret key');
+  }
+});
+
+// Unlock wallet
+document.getElementById('unlockBtn').addEventListener('click', () => {
+  const password = document.getElementById('walletPassword').value;
+  const encryptedKey = localStorage.getItem('laam_wallet_key');
+  
+  try {
+    const decrypted = CryptoJS.AES.decrypt(encryptedKey, password).toString(CryptoJS.enc.Utf8);
+    const keypair = StellarSdk.Keypair.fromSecret(decrypted);
+    
+    currentKeypair = keypair;
+    showLoggedInView();
+    
+  } catch (error) {
+    alert('Incorrect password');
+  }
+});
+
+// Show logged in view
+async function showLoggedInView() {
+  authSection.classList.add('hidden');
+  loggedInView.classList.remove('hidden');
+  
+  document.getElementById('pubKey').textContent = currentKeypair.publicKey();
+  
+  try {
+    currentAccount = await server.loadAccount(currentKeypair.publicKey());
+    await updateBalanceDisplay();
+  } catch (error) {
+    console.error('Error loading account:', error);
+  }
+}
+
+// Generate new account
+document.getElementById('generateAccountBtn').addEventListener('click', () => {
+  const keypair = StellarSdk.Keypair.random();
+  document.getElementById('secretKeyInput').value = keypair.secret();
+  alert('New account generated! Make sure to fund it with at least 2 XLM to activate.');
+});
+
+// Reset wallet
+document.getElementById('resetWalletLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  if (confirm('This will remove your saved wallet. Are you sure?')) {
+    localStorage.removeItem('laam_wallet_key');
+    unlockView.classList.add('hidden');
+    initialView.classList.remove('hidden');
+  }
+});
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  currentKeypair = null;
+  currentAccount = null;
+  loggedInView.classList.add('hidden');
+  authSection.classList.remove('hidden');
+});
+
+// Add trustline for Laam
+document.getElementById('addTrustlineBtn').addEventListener('click', async () => {
+  if (!currentKeypair) return;
+  
+  try {
+    const account = await server.loadAccount(currentKeypair.publicKey());
+    const asset = new StellarSdk.Asset(LAAM_TOKEN.code, LAAM_TOKEN.issuer);
+    
+    const transaction = new StellarSdk.TransactionBuilder(account, {
+      fee: StellarSdk.BASE_FEE,
+      networkPassphrase: StellarSdk.Networks.PUBLIC
+    })
+    .addOperation(StellarSdk.Operation.changeTrust({ asset }))
+    .setTimeout(180)
+    .build();
+    
+    transaction.sign(currentKeypair);
+    
+    const result = await server.submitTransaction(transaction);
+    alert('Laam trustline added successfully!');
+    await updateBalanceDisplay();
+    
+  } catch (error) {
+    console.error('Error adding trustline:', error);
+    alert('Error adding trustline: ' + error.message);
+  }
+});
+
+// Send toggle
+document.getElementById('btnSendToggle').addEventListener('click', () => {
+  const sendForm = document.getElementById('sendForm');
+  sendForm.style.display = sendForm.style.display === 'none' ? 'block' : 'none';
+});
+
+// Send transaction
+document.getElementById('btnSend').addEventListener('click', async () => {
+  const asset = document.getElementById('sendAsset').value;
+  const amount = document.getElementById('sendAmount').value;
+  const destination = document.getElementById('sendDest').value;
+  
+  if (!amount || !destination) {
+    alert('Please fill in all fields');
+    return;
+  }
+  
+  try {
+    const account = await server.loadAccount(currentKeypair.publicKey());
+    
+    let operation;
+    if (asset === 'XLM') {
+      operation = StellarSdk.Operation.payment({
+        destination,
+        asset: StellarSdk.Asset.native(),
+        amount
+      });
+    } else {
+      const laamAsset = new StellarSdk.Asset(LAAM_TOKEN.code, LAAM_TOKEN.issuer);
+      operation = StellarSdk.Operation.payment({
+        destination,
+        asset: laamAsset,
+        amount
+      });
     }
     
-    async function sendPayment(assetCode, amount, destination) {
-      const account = await server.loadAccount(currentKeypair.publicKey());
-      
-      let asset;
-      if (assetCode === 'XLM') {
-        asset = StellarSdk.Asset.native();
-      } else if (assetCode === 'LAAM') {
-        asset = LAAM_ASSET;
-      } else {
-        throw new Error('Unsupported asset');
-      }
-      
-      const transaction = new StellarSdk.TransactionBuilder(account, {
-        fee: StellarSdk.BASE_FEE,
-        networkPassphrase: StellarSdk.Networks.PUBLIC
-      })
-      .addOperation(StellarSdk.Operation.payment({
-        destination: destination,
-        asset: asset,
-        amount: amount.toString()
-      }))
-      .setTimeout(30)
-      .build();
-      
-      transaction.sign(currentKeypair);
-      
-      const result = await server.submitTransaction(transaction);
-      return result;
-    }
+    const transaction = new StellarSdk.TransactionBuilder(account, {
+      fee: StellarSdk.BASE_FEE,
+      networkPassphrase: StellarSdk.Networks.PUBLIC
+    })
+    .addOperation(operation)
+    .setTimeout(180)
+    .build();
     
-    async function addTrustline() {
-      const account = await server.loadAccount(currentKeypair.publicKey());
-      
-      const transaction = new StellarSdk.TransactionBuilder(account, {
-        fee: StellarSdk.BASE_FEE,
-        networkPassphrase: StellarSdk.Networks.PUBLIC
-      })
-      .addOperation(StellarSdk.Operation.changeTrust({
-        asset: LAAM_ASSET
-      }))
-      .setTimeout(30)
-      .build();
-      
-      transaction.sign(currentKeypair);
-      
-      const result = await server.submitTransaction(transaction);
-      return result;
-    }
+    transaction.sign(currentKeypair);
     
-    async function placeBuyOrder(price, amount) {
-      const account = await server.loadAccount(currentKeypair.publicKey());
-      
-      const transaction = new StellarSdk.TransactionBuilder(account, {
-        fee: StellarSdk.BASE_FEE,
-        networkPassphrase: StellarSdk.Networks.PUBLIC
-      })
-      .addOperation(StellarSdk.Operation.manageBuyOffer({
-        selling: StellarSdk.Asset.native(), // XLM
-        buying: LAAM_ASSET, // LAAM
-        buyAmount: amount.toString(),
-        price: price.toString()
-      }))
-      .setTimeout(30)
-      .build();
-      
-      transaction.sign(currentKeypair);
-      
-      const result = await server.submitTransaction(transaction);
-      return result;
-    }
+    const result = await server.submitTransaction(transaction);
+    alert('Transaction sent successfully!');
+    await updateBalanceDisplay();
     
-    async function loadOrderbook() {
-      try {
-        const orderbook = await server.orderbook(StellarSdk.Asset.native(), LAAM_ASSET).call();
-        
-        // Update asks (sell orders)
-        const asksBody = document.getElementById('asksBody');
-        asksBody.innerHTML = '';
-        
-        orderbook.asks.slice(0, 5).forEach(ask => {
-          const row = document.createElement('tr');
-          row.className = 'ask-row';
-          row.innerHTML = `
-            <td>${formatAmount(ask.amount)}</td>
-            <td>${formatAmount(ask.price)}</td>
-            <td>${formatAmount(ask.amount * ask.price)}</td>
-          `;
-          asksBody.appendChild(row);
-        });
-        
-        // Update bids (buy orders)
-        const bidsBody = document.getElementById('bidsBody');
-        bidsBody.innerHTML = '';
-        
-        orderbook.bids.slice(0, 5).forEach(bid => {
-          const row = document.createElement('tr');
-          row.className = 'bid-row';
-          row.innerHTML = `
-            <td>${formatAmount(bid.amount)}</td>
-            <td>${formatAmount(bid.price)}</td>
-            <td>${formatAmount(bid.amount * bid.price)}</td>
-          `;
-          bidsBody.appendChild(row);
-        });
-        
-        // Update spread
-        if (orderbook.asks.length > 0 && orderbook.bids.length > 0) {
-          const spread = parseFloat(orderbook.asks[0].price) - parseFloat(orderbook.bids[0].price);
-          document.getElementById('spreadValue').textContent = `Spread: ${formatAmount(spread)} XLM`;
-        }
-        
-        // Update overview price
-        if (orderbook.asks.length > 0) {
-          document.getElementById('overviewLaamPriceXLM').textContent = formatAmount(orderbook.asks[0].price);
-        }
-        
-      } catch (error) {
-        console.error('Error loading orderbook:', error);
-      }
-    }
+    // Clear form
+    document.getElementById('sendAmount').value = '';
+    document.getElementById('sendDest').value = '';
+    document.getElementById('sendForm').style.display = 'none';
     
-    function openTradeModal(type) {
-      const modal = document.getElementById('tradeModal');
-      const title = document.getElementById('modalTitle');
-      const panelTitle = document.getElementById('panelTitle');
-      const button = document.getElementById('modalBuyBtn');
-      const availBalance = document.getElementById('availBalance');
-      
-      if (type === 'buy') {
-        title.textContent = 'Buy Laam';
-        panelTitle.textContent = 'Buy Laam';
-        button.textContent = 'Buy Laam';
-        button.className = 'cta buy';
-        
-        // Show XLM balance
-        const xlmBal = document.getElementById('xlmBal').textContent;
-        availBalance.textContent = `${xlmBal} XLM`;
-      } else {
-        title.textContent = 'Sell Laam';
-        panelTitle.textContent = 'Sell Laam';
-        button.textContent = 'Sell Laam';
-        button.className = 'cta sell';
-        
-        // Show Laam balance
-        const laamBal = document.getElementById('laamBal').textContent;
-        availBalance.textContent = `${laamBal} Laam`;
-      }
-      
-      modal.classList.add('show');
-    }
-    
-    function closeTradeModal() {
-      document.getElementById('tradeModal').classList.remove('show');
-      // Clear form
-      document.getElementById('modalPrice').value = '';
-      document.getElementById('modalAmount').value = '';
-      document.getElementById('modalTotal').value = '';
-    }
-    
-    function updateTotal() {
-      const price = parseFloat(document.getElementById('modalPrice').value) || 0;
-      const amount = parseFloat(document.getElementById('modalAmount').value) || 0;
-      const total = price * amount;
-      
-      document.getElementById('modalTotal').value = total.toFixed(7);
-    }
-    
-    function switchTab(tab) {
-      // Remove active class from all tabs
-      document.querySelectorAll('.trade-tabs .tab').forEach(t => t.classList.remove('active'));
-      
-      // Hide all content
-      document.getElementById('orderbookContent').style.display = 'none';
-      document.getElementById('overviewContent').style.display = 'none';
-      document.getElementById('lastTradesContent').style.display = 'none';
-      
-      // Show selected tab and content
-      if (tab === 'overview') {
-        document.getElementById('overviewTab').classList.add('active');
-        document.getElementById('overviewContent').style.display = 'block';
-      } else if (tab === 'orderbook') {
-        document.getElementById('orderbookTab').classList.add('active');
-        document.getElementById('orderbookContent').style.display = 'block';
-      } else if (tab === 'lastTrades') {
-        document.getElementById('lastTradesTab').classList.add('active');
-        document.getElementById('lastTradesContent').style.display = 'block';
-      }
-    }
-    
-    // Reset wallet link
-    document.getElementById('resetWalletLink').addEventListener('click', function(e) {
-      e.preventDefault();
-      if (confirm('Are you sure you want to reset your wallet? This will remove all saved data.')) {
-        localStorage.removeItem('laam_wallet_key');
-        localStorage.removeItem('laam_wallet_public');
-        location.reload();
-      }
-    });
-  </script>
+  } catch (error) {
+    console.error('Error sending transaction:', error);
+    alert('Error sending transaction: ' + error.message);
+  }
+});
+
+// Initialize app
+checkSavedWallet();
+
+// Update balance every 30 seconds
+setInterval(() => {
+  if (currentKeypair) {
+    updateBalanceDisplay();
+  }
+}, 30000);
+</script>
 </body>
 </html>
